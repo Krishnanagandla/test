@@ -39,7 +39,7 @@ while( results.next() ){
    var newRole = results.getColumnValue(1);
    var sql_command = `select count(*) as cnt
                    from snowflake.account_usage.roles
-                   where role = upper(:1)`;
+                   where name = upper(:1)`;
 
     var stmt = snowflake.createStatement({sqlText: sql_command, binds:[newRole]});
     var rs = stmt.execute();
