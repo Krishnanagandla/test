@@ -39,12 +39,13 @@ while( results.next() ){
    var newRole = results.getColumnValue(1);
    var sql_command = `select count(*) as cnt
                    from snowflake.account_usage.roles
-                   where role_name = upper(:1)`;
+                   where role = upper(:1)`;
 
-    var stmt = snowflake.createStatement({sqlText: sql_command, binds:[role_name]});
+    var stmt = snowflake.createStatement({sqlText: sql_command, binds:[newRole]});
     var rs = stmt.execute();
-
-    if (rs.next()) {
+    rs.next();  // move to first row
+    var exists = rs.getColumnValue(1); // boolean
+    if (exists) {
         var SQLPERM = results.getColumnValue(2);
         snowflake.execute( {sqlText: SQLPERM });
     }   
